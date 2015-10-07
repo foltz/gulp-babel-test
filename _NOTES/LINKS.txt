@@ -1,0 +1,21 @@
+http://egorsmirnov.me/2015/05/22/react-and-es6-part1.html
+
+npm install --save react
+npm install --save-dev gulp browserify babelify vinyl-source-stream
+
+
+
+- gulpfile.babel.js:
+https://markgoodyear.com/2015/06/using-es6-with-gulp/
+
+ - gulp clean:
+https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md
+
+
+ - using browserify (doesn't currently work with the code)
+http://egorsmirnov.me/2015/05/25/browserify-babelify-and-es6.html
+
+
+ - react es6+ with babel:
+ http://babeljs.io/blog/2015/06/07/react-on-es6-plus/
+ !!! - apparently you have to set "stage: 0" in .babelrc
