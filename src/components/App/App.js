@@ -2,9 +2,8 @@
 
 import React, { PropTypes, Component } from 'react';
 
-import Header from '../Header';
-import Feedback from '../Feedback';
-import Footer from '../Footer';
+import Header from '../Header/Header.js';
+import Footer from '../Footer/Footer.js';
 
 class App extends Component {
 
@@ -18,7 +17,6 @@ class App extends Component {
       <div>
         <Header />
         {this.props.children}
-        <Feedback />
         <Footer />
       </div>
     ) : this.props.children;
