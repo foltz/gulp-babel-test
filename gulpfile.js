@@ -1,4 +1,6 @@
 var gulp = require('gulp');
+var gulpFilter = require('gulp-filter');
+
 var babel = require('gulp-babel');
 var sourceMaps = require("gulp-sourcemaps");
 
@@ -10,20 +12,34 @@ gulp.task('clean', function () {
 });
 
 
-gulp.task('build', function () {
+gulp.task('build', ['clean'], function () {
 
-	return gulp.src('src/**/*.js')
+	var jsFilter = gulpFilter('**/*.js', {restore:true});
 
-		//.pipe(sourceMaps.init())
-		.pipe(babel())
-		//.pipe(sourceMaps.write("."))
+	return gulp.src('src/**/*')
+
+			.pipe(jsFilter)
+			.pipe(sourceMaps.init())
+			.pipe(babel())
+			.pipe(sourceMaps.write("."))
+			.pipe(jsFilter.restore)
+
+			.pipe(gulp.dest('dist'));
+});
+
+gulp.task('dist-assets', function () {
+
+	var jsFilter = gulpFilter(['*.js']);
+	return gulp.src('src/**/*')
+
+		.pipe(filter)
 		.pipe(gulp.dest('dist'));
 });
 
-
+//gulp.task('build', ['clean', 'dist-js', 'dist-assets']);
 
 gulp.task('watch', ['build'], function () {
-	gulp.watch('*.js', ['build']);
+	gulp.watch('src/**/*', ['build']);
 });
 
 gulp.task('default', ['watch']);
