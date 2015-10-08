@@ -22,7 +22,6 @@ class App extends Component {
       </div>
     ) : this.props.children;
   }
-
 }
 
 export default App;
