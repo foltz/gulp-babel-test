@@ -1,0 +1,7 @@
+NEXT UP:
+
+
+ - get the react-components rendering
+ - get the react-router wired up
+
+ - setup a hot-loader with nodemon
