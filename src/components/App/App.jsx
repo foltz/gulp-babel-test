@@ -2,8 +2,8 @@
 
 import React, { PropTypes, Component } from 'react';
 
-import Header from '../Header/Header.js';
-import Footer from '../Footer/Footer.js';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 
 class App extends Component {
 
@@ -15,6 +15,7 @@ class App extends Component {
   render() {
     return !this.props.error ? (
       <div>
+          This is the react app!
         <Header />
         {this.props.children}
         <Footer />

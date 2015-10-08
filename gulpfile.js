@@ -14,7 +14,7 @@ gulp.task('clean', function () {
 
 gulp.task('build', ['clean'], function () {
 
-	var jsFilter = gulpFilter('**/*.js', {restore:true});
+	var jsFilter = gulpFilter('**/*.{js,jsx}', {restore:true});
 
 	return gulp.src('src/**/*')
 
@@ -29,7 +29,7 @@ gulp.task('build', ['clean'], function () {
 
 gulp.task('dist-assets', function () {
 
-	var jsFilter = gulpFilter(['*.js']);
+	var jsFilter = gulpFilter(['*.js$']);
 	return gulp.src('src/**/*')
 
 		.pipe(filter)

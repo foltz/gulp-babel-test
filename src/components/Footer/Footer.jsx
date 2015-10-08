@@ -5,16 +5,16 @@ import React, { PropTypes, Component } from 'react';
 class Footer extends Component {
 
   //static propTypes = {
-  //  //viewport: PropTypes.shape({
-  //  //width: PropTypes.number.isRequired,
-  //  //height: PropTypes.number.isRequired
+  //  viewport: PropTypes.shape({
+  //    width: PropTypes.number.isRequired,
+  //    height: PropTypes.number.isRequired
   //  }).isRequired
   //};
 
   render() {
     // This is just an example how one can render CSS
-    const { width, height } = this.props.viewport;
-    this.renderCss(`.Footer-viewport:after {content:' ${width}x${height}';}`);
+    //const { width, height } = this.props.viewport;
+    //this.renderCss(`.Footer-viewport:after {content:' ${width}x${height}';}`);
 
     return (
       <div className="Footer">

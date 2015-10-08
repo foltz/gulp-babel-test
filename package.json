@@ -18,5 +18,5 @@
     "gulp-sourcemaps": "^1.6.0",
     "vinyl-source-stream": "^1.1.0"
   },
-  "main": "dist/app.js"
+  "main": "dist/app.jsx"
 }
