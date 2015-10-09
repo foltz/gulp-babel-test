@@ -43,4 +43,4 @@ var init = (app) => {
 	//});
 }
 
-module.exports =  {initApp: init};
+export default {initApp: init};
