@@ -1,32 +1,31 @@
 
 import React, { PropTypes, Component } from 'react';
+import {Link} from 'react-router';
 
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
 class App extends Component {
 
-  static propTypes = {
-    children: PropTypes.element, //.isRequired,
-    error: PropTypes.object,
-  }
+	static propTypes = {
+		children: PropTypes.element, //.isRequired,
+		error: PropTypes.object,
+	}
 
-  render() {
-    return !this.props.error ? (
-        <html>
-            <head>
-	            <link rel="stylesheet" href="css/test.css" />
-            </head>
-        <body>
-	        <div>
-		        This is the react app!??
-		        <Header />
-		        {this.props.children}
-		        <Footer />
-	        </div>
-        </body>
+	render() { return !this.props.error ? (
 
-      </html>
+		<div>
+			<div>
+				<Link to="/">Home</Link> &nbsp;
+				<Link to="/about">About</Link> &nbsp;
+				<Link to="/users">Users</Link> &nbsp;
+				<Link to="/users/23">One User</Link> &nbsp;
+			</div>
+			<Header />
+				{this.props.children}
+			<Footer />
+		</div>
+
     ) : this.props.children;
   }
 }

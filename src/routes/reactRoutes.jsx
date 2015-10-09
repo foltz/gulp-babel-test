@@ -10,13 +10,10 @@ import User from '../components/App/Pages/User';
 
 export default [
 	<Route path="/" component={App}>
-		<Route path="/about" component={About}/>
+		<Route path="about" component={About}/>
 		<Route path="users" component={Users}>
-			<Route path="/user/:userId" component={User}/>
+			<Route path=":userId" component={User}/>
 		</Route>
 		<Route path="*" component={NoMatch}/>
-	</Route>,
-	<Route path="/dashboard/*" component={require('../components/App/App')}>
-		{/* ... */}
 	</Route>
 ];

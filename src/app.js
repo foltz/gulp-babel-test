@@ -10,6 +10,8 @@ app.set('views', path.join(__dirname, 'views/layouts'));
 app.set('view engine', 'hbs');
 
 app.use('/css', express.static('dist/css'));
+app.use('/js', express.static('dist/js'));
+
 appRouter.initApp(app);
 
 

@@ -6,7 +6,7 @@ import runSequence from 'run-sequence';
 import gulpFilter from 'gulp-filter';
 
 import babel from 'gulp-babel';
-import sourceMaps from 'gulp-sourcemaps';
+import sourcemaps from 'gulp-sourcemaps';
 
 import del from 'del';
 
@@ -40,9 +40,9 @@ gulp.task('build-dist', (done) => {
 		gulp.src('src/**/*')
 
 				.pipe(jsFilter)
-				.pipe(sourceMaps.init())
+				.pipe(sourcemaps.init())
 				.pipe(babel())
-				.pipe(sourceMaps.write("."))
+				.pipe(sourcemaps.write("."))
 				.pipe(jsFilter.restore)
 
 				.pipe(gulp.dest('dist'));
@@ -85,13 +85,86 @@ gulp.task('dev', ['watch'], () => {
 gulp.task('default', ['watch']);
 
 
+import browserify from 'browserify';
+import watchify from 'watchify';
+import babelify from 'babelify';
 
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
+import merge from 'utils-merge';
+import gutil from 'gulp-util';
 
+import rename from 'gulp-rename';
+import uglify from 'gulp-uglify'
 
+import chalk from 'chalk';
 
+gulp.task('browser', function () {
+	// set up the browserify instance on a task basis
+	//var b = browserify({
+	//	//entries: 'js/client-router.js',
+	//	debug: true
+	//});
+	//
+	//return b.bundle()
+	//		.pipe(source('src/js/client-router.js'))
+	//		.pipe(buffer())
+	//		.pipe(sourcemaps.init({loadMaps: true}))
+	//		// Add transformation tasks to the pipeline here.
+	//		//.pipe(uglify())
+	//		.on('error', gutil.log)
+	//		.pipe(sourcemaps.write('./'))
+	//		.pipe(gulp.dest('./dist/js'));
 
+	var args = merge(watchify.args, { debug: true });
+	var bundler = watchify(browserify('dist/routes/client-router.js', args))
+			.transform(babelify, { /* opts */ });
 
+	bundle_js(bundler)
 
+	bundler.on('update', function () {
+		bundle_js(bundler)
+	})
+
+});
+
+function bundle_js(bundler) {
+	return bundler.bundle()
+			.on('error', map_error)
+			.pipe(source('dist/routes/client-router.js'))
+			.pipe(buffer())
+			.pipe(gulp.dest('app/dist'))
+			.pipe(rename('app.min.js'))
+			.pipe(sourcemaps.init({ loadMaps: true }))
+			// capture sourcemaps from transforms
+			.pipe(uglify())
+			.pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest('app/dist'))
+}
+
+function map_error(err) {
+	if (err.fileName) {
+		// regular error
+		gutil.log(chalk.red(err.name)
+				+ ': '
+				+ chalk.yellow(err.fileName.replace(__dirname + '/src/js/', ''))
+				+ ': '
+				+ 'Line '
+				+ chalk.magenta(err.lineNumber)
+				+ ' & '
+				+ 'Column '
+				+ chalk.magenta(err.columnNumber || err.column)
+				+ ': '
+				+ chalk.blue(err.description))
+	} else {
+		// browserify error..
+		gutil.log(chalk.red(err.name)
+				+ ': '
+				+ chalk.yellow(err.message))
+	}
+
+	this.end()
+}
 
 
 

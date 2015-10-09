@@ -12,13 +12,20 @@
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
+    "chalk": "^1.1.1",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-filter": "^3.0.1",
     "gulp-nodemon": "^2.0.4",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
-    "run-sequence": "^1.1.4"
+    "gulp-uglify": "^1.4.1",
+    "run-sequence": "^1.1.4",
+    "utils-merge": "^1.0.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.4.0"
   },
   "main": "dist/app.jsx"
 }

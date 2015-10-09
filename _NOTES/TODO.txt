@@ -1,7 +1,8 @@
 NEXT UP:
 
 
- - get the react-components rendering
- - get the react-router wired up
+ - setup Links
+ - setup client-side routing...
 
- - setup a hot-loader with nodemon
+  - TRY using babel instead of babelify (and/or set {stage:0})
+  - TRY using webpack...
