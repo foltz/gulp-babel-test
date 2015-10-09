@@ -10,6 +10,8 @@ import sourceMaps from 'gulp-sourcemaps';
 
 import del from 'del';
 
+import nodemon from 'gulp-nodemon';
+
 
 gulp.task('clean-dist', () => del(['dist/**/*']));
 
@@ -52,10 +54,33 @@ gulp.task('build-dist', (done) => {
 
 //gulp.task('build', ['clean', 'dist-js', 'dist-assets']);
 
-gulp.task('watch', ['build-dist'], () => {
+gulp.task('watch', () => {
 	gulp.watch('src/**/*', ['build-dist']);
 	gulp.watch('static/**/*', ['build-static']);
 });
+
+gulp.task('dev', ['watch'], () => {
+
+	runSequence('build-dist', () => {
+
+		setTimeout(() => {
+
+			nodemon({ script: 'dist/app.js'
+				//, ext: 'html js'
+				//, ignore: ['ignored.js']
+				//, tasks: ['lint']
+			}).on('restart', function () {
+				console.log('restarted!');
+				//runSequence('watch');
+			});
+
+		}, 500);
+
+
+
+	});
+});
+
 
 gulp.task('default', ['watch']);
 

@@ -41,6 +41,6 @@ var init = (app) => {
 	//		res.render('index', { content: content });
 	//	});
 	//});
-}
+};
 
 export default {initApp: init};

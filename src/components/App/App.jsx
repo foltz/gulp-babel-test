@@ -13,12 +13,20 @@ class App extends Component {
 
   render() {
     return !this.props.error ? (
-      <div>
-          This is the react app!
-        <Header />
-        {this.props.children}
-        <Footer />
-      </div>
+        <html>
+            <head>
+	            <link rel="stylesheet" href="css/test.css" />
+            </head>
+        <body>
+	        <div>
+		        This is the react app!??
+		        <Header />
+		        {this.props.children}
+		        <Footer />
+	        </div>
+        </body>
+
+      </html>
     ) : this.props.children;
   }
 }
