@@ -1,10 +1,7 @@
 
 import React, { PropTypes, Component } from 'react';
 
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-
-class App extends Component {
+class NoMatch extends Component {
 
   static propTypes = {
     children: PropTypes.element, //.isRequired,
@@ -14,13 +11,10 @@ class App extends Component {
   render() {
     return !this.props.error ? (
       <div>
-          This is the react app!
-        <Header />
-        {this.props.children}
-        <Footer />
+          NO MATCH!!!!
       </div>
     ) : this.props.children;
   }
 }
 
-export default App;
+export default NoMatch;

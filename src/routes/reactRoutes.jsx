@@ -1,11 +1,22 @@
-var React = require('react')
-var {DefaultRoute, NotFoundRoute, Route} = require('react-router')
+import React from 'react';
+import {DefaultRoute, NotFoundRoute, Route} from 'react-router';
 
-module.exports = [
-	<Route path="/" handler={require('../components/App/App')}>
-	{/* ... */}
+import App from '../components/App/App';
+import NoMatch from '../components/App/NoMatch';
+
+import About from '../components/App/Pages/About';
+import Users from '../components/App/Pages/Users';
+import User from '../components/App/Pages/User';
+
+export default [
+	<Route path="/" component={App}>
+		<Route path="/about" component={About}/>
+		<Route path="users" component={Users}>
+			<Route path="/user/:userId" component={User}/>
+		</Route>
+		<Route path="*" component={NoMatch}/>
 	</Route>,
-	<Route path="/dashboard/*" handler={require('../components/App/App')}>
+	<Route path="/dashboard/*" component={require('../components/App/App')}>
 		{/* ... */}
 	</Route>
-]
+];

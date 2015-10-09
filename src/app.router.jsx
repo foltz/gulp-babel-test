@@ -1,25 +1,46 @@
 
-var React = require('react')
-var Router = require('react-router')
+import React from 'react';
+import Router from 'react-router';
 
-var routes = require('./routes/reactRoutes');
+import { renderToString } from 'react-dom/server'
+import { match, RoutingContext } from 'react-router'
+
+import routes from './routes/reactRoutes';
 
 var init = (app) => {
 
-	app.get('/dashboard', function (req, res) {
-		Router.run(routes, req.url, Handler => {
-			let content = React.renderToString(<Handler />);
-			res.render('dashboard', { content: content });
+	//app.get('/dashboard', function (req, res) {
+	//	Router.run(routes, req.url, Handler => {
+	//		let content = React.renderToString(<Handler />);
+	//		res.render('dashboard', { content: content });
+	//	});
+	//});
+
+	app.get('/*', (req, res) => {
+
+		match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+
+			if (error) res.status(500).send(error.message);
+
+			else if (redirectLocation)
+				res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+
+			else if (renderProps)
+				res.status(200).send(renderToString(<RoutingContext {...renderProps} />));
+
+			else res.status(404).send('Not found');
+
 		});
+
 	});
 
-	app.get('/*', function (req, res) {
-		Router.run(routes, req.url, Handler => {
-			let content = React.renderToString(<Handler />);
-			res.render('index', { content: content });
-		});
-	});
+	//app.get('/*', function (req, res) {
+	//	React.render(<Router routes={routes}/>, el)
+	//	Router.run(routes, req.url, Handler => {
+	//		let content = React.renderToString(<Handler />);
+	//		res.render('index', { content: content });
+	//	});
+	//});
 }
-var test = () => "yo";
 
-module.exports =  {initApp: init, testMe: test};
+module.exports =  {initApp: init};

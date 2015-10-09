@@ -9,6 +9,7 @@ var appRouter = require('./app.router');
 app.set('views', path.join(__dirname, 'views/layouts'));
 app.set('view engine', 'hbs');
 
+app.use('/css', express.static('dist/css'));
 appRouter.initApp(app);
 
 
