@@ -1,8 +1,20 @@
 NEXT UP:
 
 
- - setup Links
  - setup client-side routing...
+ - setup Links
 
-  - TRY using babel instead of babelify (and/or set {stage:0})
-  - TRY using webpack... 
+ - figure out the whole firebase thing...
+
+LATER
+ - play with dynamic routes (big app example).
+ - setup folder structure....
+
+ /src
+  /app - components, routes & biz-logic
+  /client - css & less, client-js-libs, other assets
+  /server (?) - express, layout/views
+
+ /dist
+  /client - client-js-bundles, etc.
+  /server - server-js-bundles
