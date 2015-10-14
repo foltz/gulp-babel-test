@@ -2,15 +2,15 @@ var express = require('express');
 var path = require('path');
 
 var app = express();
-var appRouter = require('./app.router');
+var appRouter = require('./server-router');
 
 // - view engine setup:
 
 app.set('views', path.join(__dirname, 'views/layouts'));
 app.set('view engine', 'hbs');
 
-app.use('/css', express.static('dist/css'));
-app.use('/js', express.static('dist/js'));
+app.use('/css', express.static('www/client/css'));
+app.use('/js', express.static('www/client/js'));
 
 appRouter.initApp(app);
 

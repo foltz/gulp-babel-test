@@ -15,6 +15,6 @@ LATER
   /client - css & less, client-js-libs, other assets
   /server (?) - express, layout/views
 
- /dist
+ /www
   /client - client-js-bundles, etc.
   /server - server-js-bundles

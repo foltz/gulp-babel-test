@@ -24,27 +24,22 @@ import source from 'vinyl-source-stream';
 let tasks = {
 
 
-	cleanDist : () => del(['dist/**/*']),
-	cleanCss : () => del(['dist/css']),
-	cleanBuild : () => del(['build']),
+	cleanWww : () => del(['www']),
+	cleanApp : () => del(['www/app']),
 
-	copyCss: () => {
+	cleanClient : () => del(['www/client']),
+	cleanCss : () => del(['www/client/css']),
+	cleanJs : () => del(['www/client/js']),
 
-		return gulp.src('static/css/*')
-				.pipe(gulp.dest('dist/css'));
-	},
+	//cleanBuild : () => del(['build']),
 
-	buildCss: (done) => {
-		runSequence('clean-css', 'copy-css', () => { done(); });
-	},
+	buildApp: (done) => {
 
-	buildDist: (done) => {
-
-		runSequence('clean-dist', 'build-static', () => {
+		runSequence('clean-app', () => {
 
 			var jsFilter = gulpFilter('**/*.{js,jsx}', {restore:true});
 
-			gulp.src('src/**/*')
+			gulp.src('src/app/**/*')
 
 					.pipe(jsFilter)
 					.pipe(sourcemaps.init())
@@ -52,51 +47,44 @@ let tasks = {
 					.pipe(sourcemaps.write("."))
 					.pipe(jsFilter.restore)
 
-					.pipe(gulp.dest('dist'));
+					.pipe(gulp.dest('www/app'));
 
 			done();
 		});
 	},
 
-	buildClientRoutes: () => {
+
+	buildCss: (done) => {
+		runSequence('clean-css', () => {
+
+			// - currently it just copies the code....
+
+			gulp.src('src/client/css/*')
+					.pipe(gulp.dest('www/client/css'));
+
+			done();
+		});
+	},
+
+
+
+	buildJs_ClientRoutes: () => {
 
 		var bundler = browserify({
-			entries: ['./src/routes/client-router.js'], // Only need initial file, browserify finds the deps
+			entries: ['./src/client/js/client-router.js'], // Only need initial file, browserify finds the deps
 			transform: [babelify], // We want to convert JSX to normal javascript
 			extensions: ['.js', '.jsx'],
 			debug: true, // Gives us sourcemapping
 			//cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
 
 		});
-		//bundler.plugin('minifyify', {map: 'bundle.map.json'});
 
 		bundler.bundle() // Create the initial bundle when starting the task
 				.pipe(source('client-router.js'))
-				.pipe(gulp.dest('build'))
+				.pipe(gulp.dest('www/client/js'))
 	},
 
-	uglifyClientRoutes: () => {
-
-		var bundler = browserify({
-			entries: ['./src/routes/client-router.js'], // Only need initial file, browserify finds the deps
-			transform: [babelify], // We want to convert JSX to normal javascript
-			extensions: ['.js', '.jsx'],
-			//debug: true, // Gives us sourcemapping
-			//cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
-
-		});
-
-		bundler.transform({
-			global: true
-		}, 'uglifyify')
-
-		bundler.bundle() // Create the initial bundle when starting the task
-				.pipe(source('client-router.js'))
-				.pipe(rename('client-router.ugl.js'))
-				.pipe(gulp.dest('build'))
-	},
-
-	minifyClientRoutes: () => {
+	minifyJs_ClientRoutes: () => {
 
 		var outputFile = 'build/client-router.min.js';
 
@@ -120,56 +108,69 @@ let tasks = {
 		bundler.bundle()
 				.pipe(source('client-router.js'))
 				.pipe(rename('client-router.min.js'))
-				.pipe(gulp.dest('build'))
-				//.pipe(fs.createWriteStream(outputFile));
+				.pipe(gulp.dest('dist/js'));
+		//.pipe(fs.createWriteStream(outputFile));
 	},
 
-	runDevServer: () => {
+	uglifyJs_ClientRoutes: () => {
 
-		runSequence('build-dist', () => {
+		var bundler = browserify({
+			entries: ['./src/routes/client-router.js'], // Only need initial file, browserify finds the deps
+			transform: [babelify], // We want to convert JSX to normal javascript
+			extensions: ['.js', '.jsx'],
+			//debug: true, // Gives us sourcemapping
+			//cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
 
-			setTimeout(() => {
+		});
 
-				nodemon({ script: 'dist/app.js'
-					//, ext: 'html js'
-					//, ignore: ['ignored.js']
-					//, tasks: ['lint']
-				}).on('restart', function () {
-					console.log('restarted!');
-					//runSequence('watch');
-				});
+		bundler.transform({
+			global: true
+		}, 'uglifyify')
 
-			}, 500);
-
+		bundler.bundle() // Create the initial bundle when starting the task
+				.pipe(source('client-router.js'))
+				.pipe(rename('client-router.ugl.js'))
+				.pipe(gulp.dest('dist/js'))
+	},
 
 
+
+	runServer: () => {
+
+		nodemon({ script: 'www/app/server.js'
+			//, ext: 'html js'
+			//, ignore: ['ignored.js']
+			//, tasks: ['lint']
+		}).on('restart', function () {
+			console.log('restarted!');
+			//runSequence('watch');
 		});
 	},
 
 	runWatch: () => {
 
-		gulp.watch('src/**/*', ['build-dist']);
-		gulp.watch('static/**/*', ['build-static']);
+		gulp.watch('src/app/**/*', ['build-app']); // - build-js = client-router...
+		gulp.watch('src/client/css/*', ['build-css']);
+		gulp.watch('src/client/js/*', ['build-js']);
 	}
 
 };
 
-gulp.task('clean-dist', tasks.cleanDist);
+gulp.task('clean-www', tasks.cleanWww);
+gulp.task('clean-app', tasks.cleanApp);
+
+gulp.task('clean-client', tasks.cleanClient);
 gulp.task('clean-css', tasks.cleanCss);
-gulp.task('clean-build', tasks.cleanBuild);
+gulp.task('clean-js', tasks.cleanJs);
 
-gulp.task('copy-css', tasks.copyCss);
-
+gulp.task('build-app', tasks.buildApp);
 gulp.task('build-css', tasks.buildCss);
 
-// - this will make more sense once there are other types of static content....
-gulp.task('build-static', ['build-css']);
-gulp.task('build-dist', tasks.buildDist);
-gulp.task('build-client', tasks.buildClientRoutes);
+gulp.task('build-js', tasks.buildJs_ClientRoutes);
 gulp.task('ugl-client', tasks.uglifyClientRoutes);
 gulp.task('min-client', tasks.minifyClientRoutes);
 
-gulp.task('run-dev', ['run-watch'], tasks.runDevServer);
+gulp.task('run-server', tasks.runServer);
 gulp.task('run-watch', tasks.runWatch);
 
 gulp.task('default', ['run-watch']);

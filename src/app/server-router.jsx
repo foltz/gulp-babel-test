@@ -5,7 +5,7 @@ import Router from 'react-router';
 import { renderToString } from 'react-dom/server'
 import { match, RoutingContext } from 'react-router'
 
-import routes from './routes/reactRoutes';
+import routes from '../app/routes/reactRoutes';
 
 var init = (app) => {
 
@@ -27,8 +27,8 @@ var init = (app) => {
 
 			else if (renderProps) {
 				res.render('index', {
-					title: 'Express',
-					content:renderToString(<RoutingContext {...renderProps} />)
+					title: 'Express', content: 'client-side...'
+					//content:renderToString(<RoutingContext {...renderProps} />)
 				});
 				//res.status(200).send(renderToString(<RoutingContext {...renderProps} />));
 			}
