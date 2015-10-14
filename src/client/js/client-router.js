@@ -1,7 +1,10 @@
-var React  = require('react');
+import React from 'react';
+import ReactDOM  from 'react-dom';
+import Router from 'react-router';
+
 var createBrowserHistory = require('history/lib/createBrowserHistory');
-//import { Router, Route, IndexRoute } from 'react-router'
+let history = createBrowserHistory();
 
-var routes = require('../../app/routes/reactRoutes.jsx');
+import routes from '../../app/routes/reactRoutes.jsx';
 
-React.render(routes, document.body);
+ReactDOM.render(<Router history={history} routes={routes}/>, document.body);
