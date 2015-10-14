@@ -86,10 +86,10 @@ let tasks = {
 
 	minifyJs_ClientRoutes: () => {
 
-		var outputFile = 'build/client-router.min.js';
+		var outputFile = 'www/client/js/client-router.min.js';
 
 		var bundler = browserify({
-			entries: ['./src/routes/client-router.js'], // Only need initial file, browserify finds the deps
+			entries: ['./src/client/js/client-router.js'], // Only need initial file, browserify finds the deps
 			transform: [babelify], // We want to convert JSX to normal javascript
 			extensions: ['.js', '.jsx'],
 			debug: true, // Gives us sourcemapping
@@ -108,14 +108,13 @@ let tasks = {
 		bundler.bundle()
 				.pipe(source('client-router.js'))
 				.pipe(rename('client-router.min.js'))
-				.pipe(gulp.dest('dist/js'));
-		//.pipe(fs.createWriteStream(outputFile));
+				.pipe(gulp.dest('www/client/js'))
 	},
 
 	uglifyJs_ClientRoutes: () => {
 
 		var bundler = browserify({
-			entries: ['./src/routes/client-router.js'], // Only need initial file, browserify finds the deps
+			entries: ['./src/client/js/client-router.js'], // Only need initial file, browserify finds the deps
 			transform: [babelify], // We want to convert JSX to normal javascript
 			extensions: ['.js', '.jsx'],
 			//debug: true, // Gives us sourcemapping
@@ -130,7 +129,7 @@ let tasks = {
 		bundler.bundle() // Create the initial bundle when starting the task
 				.pipe(source('client-router.js'))
 				.pipe(rename('client-router.ugl.js'))
-				.pipe(gulp.dest('dist/js'))
+				.pipe(gulp.dest('www/client/js'))
 	},
 
 
@@ -167,8 +166,8 @@ gulp.task('build-app', tasks.buildApp);
 gulp.task('build-css', tasks.buildCss);
 
 gulp.task('build-js', tasks.buildJs_ClientRoutes);
-gulp.task('ugl-client', tasks.uglifyClientRoutes);
-gulp.task('min-client', tasks.minifyClientRoutes);
+gulp.task('ugl-client', tasks.uglifyJs_ClientRoutes);
+gulp.task('min-client', tasks.minifyJs_ClientRoutes);
 
 gulp.task('run-server', tasks.runServer);
 gulp.task('run-watch', tasks.runWatch);

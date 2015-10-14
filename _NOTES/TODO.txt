@@ -1,9 +1,5 @@
 NEXT UP:
 
-
- - setup client-side routing...
- - setup Links
-
  - figure out the whole firebase thing...
 
 LATER

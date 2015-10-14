@@ -25,3 +25,8 @@ https://github.com/christianalfoni/react-app-boilerplate
 
  - using browserify (doesn't currently work with the code)
 http://egorsmirnov.me/2015/05/25/browserify-babelify-and-es6.html
+
+
+ - uglification + compression....
+
+ http://davidwalsh.name/compress-uglify
