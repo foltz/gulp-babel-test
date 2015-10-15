@@ -28,6 +28,7 @@ var init = (app) => {
 			else if (renderProps) {
 				res.render('index', {
 					title: 'Express',
+					//content: ''
 					content:renderToString(<RoutingContext {...renderProps} />)
 				});
 				//res.status(200).send(renderToString(<RoutingContext {...renderProps} />));

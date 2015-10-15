@@ -169,6 +169,8 @@ gulp.task('build-js', tasks.buildJs_ClientRoutes);
 gulp.task('ugl-client', tasks.uglifyJs_ClientRoutes);
 gulp.task('min-client', tasks.minifyJs_ClientRoutes);
 
+gulp.task('build', ['build-app', 'build-js']);
+
 gulp.task('run-server', tasks.runServer);
 gulp.task('run-watch', tasks.runWatch);
 
