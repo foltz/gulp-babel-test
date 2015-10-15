@@ -33,7 +33,7 @@ var List = React.createClass({
 		return { items: [{".key": 'ddd', text:'test item'}], text: ''};
 	},
 
-	componentWillMount: function () {
+	componentDidMount: function () {
 
 		this.firebaseRef = new Firebase(FB_URL);
 
@@ -48,7 +48,7 @@ var List = React.createClass({
 
 			}.bind(this));
 
-			//this.setState({ items: items});
+			this.setState({ items: items});
 
 		}.bind(this));
 	},

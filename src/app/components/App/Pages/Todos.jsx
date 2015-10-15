@@ -30,13 +30,22 @@ var Todos = React.createClass({
 	//mixins: [ReactFireMixin],
 
 	getInitialState: function () {
+
+		console.log('getInitialState');
 		return { items: [], text: ''};
 	},
 
-	componentWillMount: function () {
+	componentWillMount: function() {
+
+		console.log('componentWillMount');
+
+	},
+
+	componentDidMount: function () {
+
+		console.log('componentDidMount');
 
 		this.firebaseRef = new Firebase(FB_URL);
-
 		this.firebaseRef.limitToLast(25).on('value', function(dataSnapshot) {
 
 			var items = [];
@@ -54,7 +63,13 @@ var Todos = React.createClass({
 	},
 
 	componentWillUnmount: function () {
-		this.firebaseRef.off();
+
+		console.log('componentWillUnmount');
+		if (this.firebaseRef)
+		{
+			this.firebaseRef.off();
+			console.log('firebase-off');
+		}
 	},
 
 	onChange: function (e) {
@@ -79,7 +94,7 @@ var Todos = React.createClass({
 		}
 	},
 
-	render () {
+	render: function () {
 		return (
 			<div>
 				<TodoList items={ this.state.items } removeItem={ this.removeItem } />

@@ -1,6 +1,8 @@
 NEXT UP:
 
- - figure out the whole firebase thing...
+ - setup "List.jsx" as an ES6 class format
+ - firebase authentication and permissions...
+
 
 LATER
  - play with dynamic routes (big app example).

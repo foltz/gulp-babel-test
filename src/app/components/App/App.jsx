@@ -12,9 +12,8 @@ class App extends Component {
 		error: PropTypes.object,
 	}
 
-	render() { return !this.props.error ? (
-
-		<div>
+	render() { return !this.props.error ?
+		(<div>
 			<div>
 				<Link to="/">Home</Link> &nbsp;
 				<Link to="/about">About</Link> &nbsp;
@@ -26,9 +25,9 @@ class App extends Component {
 			<Header />
 				{this.props.children}
 			<Footer />
-		</div>
+		</div>)
 
-    ) : this.props.children;
+			: this.props.children;
   }
 }
 

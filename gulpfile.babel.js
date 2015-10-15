@@ -15,6 +15,7 @@ import nodemon from 'gulp-nodemon';
 
 import browserify from 'browserify';
 import babelify from 'babelify';
+import literalify from 'literalify';
 
 import uglifyify from 'uglifyify';
 import minifyify from 'minifyify';
@@ -77,7 +78,12 @@ let tasks = {
 			debug: true, // Gives us sourcemapping
 			//cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
 
-		});
+				})
+				//.transform(literalify.configure({
+				//	'react': 'window.React',
+				//	'react-dom': 'window.ReactDOM',
+				//}))
+				;
 
 		bundler.bundle() // Create the initial bundle when starting the task
 				.pipe(source('client-router.js'))
@@ -95,7 +101,12 @@ let tasks = {
 			debug: true, // Gives us sourcemapping
 			//cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
 
-		});
+				})
+				//.transform(literalify.configure({
+				//	'react': 'window.React',
+				//	'react-dom': 'window.ReactDOM',
+				//}))
+				;
 
 		//bundler.add('./src/routes/client-router.js');
 
@@ -120,7 +131,12 @@ let tasks = {
 			//debug: true, // Gives us sourcemapping
 			//cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
 
-		});
+				})
+				//.transform(literalify.configure({
+				//	'react': 'window.React',
+				//	'react-dom': 'window.ReactDOM',
+				//}))
+				;
 
 		bundler.transform({
 			global: true
