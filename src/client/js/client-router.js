@@ -7,4 +7,5 @@ let history = createBrowserHistory();
 
 import routes from '../../app/routes/reactRoutes.jsx';
 
-ReactDOM.render(<Router history={history} routes={routes}/>, document.body);
+console.log('client-router!!!');
+ReactDOM.render(<Router history={history} routes={routes}/>, document.getElementById("react-app"));

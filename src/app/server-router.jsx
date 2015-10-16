@@ -2,7 +2,7 @@
 import React from 'react';
 import Router from 'react-router';
 
-import { renderToString } from 'react-dom/server'
+import { renderToString, renderToStaticMarkup } from 'react-dom/server'
 import { match, RoutingContext } from 'react-router'
 
 import routes from '../app/routes/reactRoutes';
@@ -27,9 +27,10 @@ var init = (app) => {
 
 			else if (renderProps) {
 				res.render('index', {
-					title: 'Express',
+					title: 'gulp-babel-test',
 					//content: ''
-					content:renderToString(<RoutingContext {...renderProps} />)
+					//content:renderToString(<RoutingContext {...renderProps} />)
+					content:renderToStaticMarkup(<RoutingContext {...renderProps} />)
 				});
 				//res.status(200).send(renderToString(<RoutingContext {...renderProps} />));
 			}

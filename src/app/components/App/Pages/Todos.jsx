@@ -1,110 +1,149 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import Firebase from 'firebase';
 
-var FB_URL = "https://slacktravel-test.firebaseio.com/items";
+class TodoRepo {
 
-var TodoList = React.createClass({
+	constructor() {
 
-  render: function () {
+		var FB_URL = "https://slacktravel-test.firebaseio.com/items/";
+		this.fBase = new Firebase(FB_URL);
+	}
 
-	  var _this = this;
-	  var createItem = function(item, index) {
-		  return (
-			  <li key={ index }>{ item.text }
+	// --------------------------------------------------------------
+	// - COMPONENT LIFECYCLE
+	// --------------------------------------------------------------
 
-				  <span
-					  onClick={ _this.props.removeItem.bind(null, item['.key']) }
-					  style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
-					X
-				  </span>
-			  </li>
-		  );
-	  };
-	  return <ul>{ this.props.items.map(createItem) }</ul>;
-  }
-});
+	doMount(cb) {
 
-var Todos = React.createClass({
-
-	//mixins: [ReactFireMixin],
-
-	getInitialState: function () {
-
-		console.log('getInitialState');
-		return { items: [], text: ''};
-	},
-
-	componentWillMount: function() {
-
-		console.log('componentWillMount');
-
-	},
-
-	componentDidMount: function () {
-
-		console.log('componentDidMount');
-
-		this.firebaseRef = new Firebase(FB_URL);
-		this.firebaseRef.limitToLast(25).on('value', function(dataSnapshot) {
+		this.fBase.limitToLast(25).on('value', function(list) {
 
 			var items = [];
-			dataSnapshot.forEach(function(childSnapshot) {
+			list.forEach(function(rec) {
 
-				var item = childSnapshot.val();
-				item['.key'] = childSnapshot.key();
+				var item = rec.val();
+				item['.key'] = rec.key();
 				items.push(item);
 
-			}.bind(this));
+			});
 
-			this.setState({ items: items});
+			cb(items);
+		});
+	}
 
-		}.bind(this));
-	},
+	doUnmount() { this.fBase.off() }
 
-	componentWillUnmount: function () {
 
-		console.log('componentWillUnmount');
-		if (this.firebaseRef)
-		{
-			this.firebaseRef.off();
-			console.log('firebase-off');
-		}
-	},
+	// --------------------------------------------------------------
+	// - ACTIONS
+	// --------------------------------------------------------------
 
-	onChange: function (e) {
-		//console.log(e.target.value);
-		this.setState({text: e.target.value});
-	},
+	addItem (text) { this.fBase.push({ text: text }) }
+	removeItem (key) { this.fBase.child(key).remove() }
+}
 
-	removeItem: function (key) {
-		var firebaseRef = new Firebase(FB_URL);
-		firebaseRef.child(key).remove();
-	},
+class Todos extends React.Component {
 
-	handleSubmit: function (e) {
+	constructor(props) {
+
+		super(props);
+
+		this.repo = new TodoRepo();
+		this.state = { text: '', items: []};
+	}
+
+
+	getRepo () { return this.repo }
+
+	getItems () { return this.state.items }
+	setItems(items) { this.setState({items: items})}
+
+	getText () { return this.state.text }
+	setText(text) { this.setState({text: text})}
+
+
+	// --------------------------------------------------------------
+	// - COMPONENT LIFECYCLE
+	// --------------------------------------------------------------
+
+	componentWillMount() {
+		console.log('List will mount');
+	}
+
+	componentDidMount () {
+		console.log('List did mount');
+		this.getRepo().doMount((items) => this.setItems(items));
+	}
+
+	componentWillUnmount () {
+		console.log('List will unmount');
+		this.getRepo().doUnmount();
+	}
+
+	componentWillReceiveProps(next) {
+		console.log('List will receive props');
+	}
+
+
+	// --------------------------------------------------------------
+	// - EVENT HANDLERS
+	// --------------------------------------------------------------
+
+	onChange (e) { this.setText(e.target.value); }
+
+	onSubmit (e) {
 
 		e.preventDefault();
 
-		if (this.state.text && this.state.text.trim().length !== 0) {
-			this.firebaseRef.push({
-				text: this.state.text
-			});
-			this.setState({ text: ''});
-		}
-	},
+		var text = this.getText();
 
-	render: function () {
+		if (text && text.trim().length !== 0) {
+
+			this.getRepo().addItem(text);
+			this.setText('');
+		}
+	}
+
+
+	// --------------------------------------------------------------
+	// - RENDER
+	// --------------------------------------------------------------
+
+	render () {
+
+		var repo = this.getRepo();
+		var items = this.getItems();
+		var text = this.getText();
+
+		function ListItems() {
+
+			var createItem = (item, index) => (
+
+				<li key={ index }>{ item.text }
+					<span
+						onClick={ repo.removeItem.bind(repo, item['.key']) }
+						style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
+					X?
+					</span>
+				</li>
+			);
+
+			return <ul>{ items.map(createItem) }</ul>;
+		}
+
 		return (
 			<div>
-				<TodoList items={ this.state.items } removeItem={ this.removeItem } />
-				<form onSubmit={ this.handleSubmit }>
-					<input onChange={ this.onChange } value={ this.state.text } />
-					<button>{ 'Add #' + (this.state.items.length + 1) }</button>
+
+				<ListItems />
+
+				<form onSubmit={ this.onSubmit.bind(this) }>
+					<input onChange={ this.onChange.bind(this) } value={ text } />
+					<button>{ 'Add? #' + (items.length + 1) }</button>
 				</form>
+
 			</div>
 		);
 	}
-});
+}
 
 export default Todos;

@@ -16,3 +16,10 @@ LATER
  /www
   /client - client-js-bundles, etc.
   /server - server-js-bundles
+
+
+
+
+  Firebase server-only writes (for security):
+
+  http://stackoverflow.com/questions/21213489/how-can-i-configure-firebase-security-rules-to-only-allow-writes-from-a-curl-php

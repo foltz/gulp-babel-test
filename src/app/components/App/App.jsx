@@ -12,6 +12,30 @@ class App extends Component {
 		error: PropTypes.object,
 	}
 
+	componentWillMount() {
+		console.log('App will mount');
+	}
+
+	componentDidMount () {
+		console.log('App did mount');
+	}
+
+	componentWillUnmount() {
+		console.log('App will unmount');
+	}
+
+	componentWillReceiveProps(next) {
+		console.log('App will receive props');
+	}
+
+	componentWillUpdate() {
+		console.log('App will update');
+	}
+
+	componentDidUpdate() {
+		console.log('App did update');
+	}
+
 	render() { return !this.props.error ?
 		(<div>
 			<div>

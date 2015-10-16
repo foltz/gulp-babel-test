@@ -30,3 +30,7 @@ http://egorsmirnov.me/2015/05/25/browserify-babelify-and-es6.html
  - uglification + compression....
 
  http://davidwalsh.name/compress-uglify
+
+
+ NPM:
+npm dedupe

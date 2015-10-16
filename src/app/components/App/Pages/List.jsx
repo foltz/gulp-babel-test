@@ -4,36 +4,44 @@ import Firebase from 'firebase';
 
 var FB_URL = "https://slacktravel-test.firebaseio.com/items";
 
-var ListItems = React.createClass({
+class ListItems extends Component {
 
-	render: function () {
+	constructor(props) {
+		super(props);
+		this.state = { items: [{".key": 'ddd', text:'test item'}], text: ''};
+	}
+
+	render () {
 
 		var _this = this;
 		var createItem = function(item, index) {
 			return (
-					<li key={ index }>{ item.text }
-
-				  <span
-						  onClick={ _this.props.removeItem.bind(null, item['.key']) }
-						  style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
+				<li key={ index }>{ item.text }
+					<span
+						onClick={ _this.props.removeItem.bind(null, item['.key']) }
+						style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
 					X
-				  </span>
-					</li>
+					</span>
+				</li>
 			);
 		};
 		return <ul>{ this.props.items.map(createItem) }</ul>;
 	}
-});
+}
 
-var List = React.createClass({
+class List extends Component {
 
-	//mixins: [ReactFireMixin],
+	constructor(props) {
+		super(props);
+		this.state = { items: [{".key": 'ddd', text:'test item'}], text: ''};
+	}
 
-	getInitialState: function () {
-		return { items: [{".key": 'ddd', text:'test item'}], text: ''};
-	},
+	componentWillMount() {
+		console.log('List will mount');
+	}
 
-	componentDidMount: function () {
+	componentDidMount () {
+		console.log('List did mount');
 
 		this.firebaseRef = new Firebase(FB_URL);
 
@@ -51,22 +59,28 @@ var List = React.createClass({
 			this.setState({ items: items});
 
 		}.bind(this));
-	},
+	}
 
-	componentWillUnmount: function () {
+	componentWillUnmount () {
+		console.log('List will unmount');
 		this.firebaseRef.off();
-	},
+	}
 
-	onChange: function (e) {
+	componentWillReceiveProps(next) {
+		console.log('List will receive props');
+	}
+
+	onChange (e) {
 		console.log(e.target.value);
 		this.setState({text: e.target.value});
-	},
+	}
 
-	removeItem: function (key) {
+	removeItem (key) {
+		var firebaseRef = new Firebase(FB_URL);
+		firebaseRef.child(key).remove();
+	}
 
-	},
-
-	handleSubmit: function (e) {
+	handleSubmit (e) {
 
 		e.preventDefault();
 
@@ -76,7 +90,7 @@ var List = React.createClass({
 			});
 			this.setState({ text: ''});
 		}
-	},
+	}
 
 	render () {
 		return (
@@ -89,6 +103,6 @@ var List = React.createClass({
 			</div>
 		);
 	}
-});
+}
 
 export default List;
