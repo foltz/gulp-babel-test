@@ -34,3 +34,7 @@ http://egorsmirnov.me/2015/05/25/browserify-babelify-and-es6.html
 
  NPM:
 npm dedupe
+
+
+react/bootstrap:
+http://react-bootstrap.github.io/

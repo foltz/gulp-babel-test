@@ -1,6 +1,5 @@
 NEXT UP:
 
- - setup "List.jsx" as an ES6 class format
  - firebase authentication and permissions...
 
 
