@@ -24,9 +24,15 @@
     "gulp-sourcemaps": "^1.6.0",
     "literalify": "^0.4.0",
     "minifyify": "^7.1.0",
+    "parallelshell": "^2.0.0",
+    "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
     "uglifyify": "^3.0.1",
     "vinyl-source-stream": "^1.1.0"
   },
-  "main": "dist/app.jsx"
+  "main": "dist/app.jsx",
+
+  "scripts": {
+	"clean": "rimraf dist/*"
+  }
 }

@@ -22,6 +22,49 @@ import minifyify from 'minifyify';
 
 import source from 'vinyl-source-stream';
 
+class gulpTasks {
+
+	whenDone(done) {
+		if (typeof done === "function") done();
+	}
+
+	distRoot = "www"
+	distDir(subDir) { return `${this.distRoot}/${subDir}` }
+
+	clean() { del([this.distRoot]) }
+
+	cleanApp(done) { del([this.distDir("app")]);     this.whenDone(done);}
+
+	cleanClient() { del([this.distDir("client")]) }
+	cleanClientCss(done) { del([this.distDir("client/css")]);    this.whenDone(done);}
+	cleanClientJs() { del([this.distDir("client/js")]) }
+
+	buildApp() {
+
+		this.cleanApp(() => {
+
+			var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
+
+			gulp.src('src/app/**/*')
+					.pipe(jsFilter)
+					.pipe(sourcemaps.init())
+					.pipe(babel())
+					.pipe(sourcemaps.write("."))
+					.pipe(jsFilter.restore)
+
+					.pipe(gulp.dest(this.distDir("app")));
+		});
+	}
+
+	buildCss() {
+
+		this.cleanCss(() => {
+			gulp.src('src/client/css/*')
+					.pipe(gulp.dest(this.distDir("client/css")));
+		});
+	}
+}
+
 let tasks = {
 
 
@@ -171,15 +214,27 @@ let tasks = {
 
 };
 
-gulp.task('clean-www', tasks.cleanWww);
-gulp.task('clean-app', tasks.cleanApp);
 
-gulp.task('clean-client', tasks.cleanClient);
-gulp.task('clean-css', tasks.cleanCss);
-gulp.task('clean-js', tasks.cleanJs);
+var gT = new gulpTasks();
+gulp.task('clean', () => gt.cleanWww());
+//gulp.task('clean-app', gt.cleanApp);
+//
+//gulp.task('clean-client', gt.cleanClient);
+//gulp.task('clean-css', gt.cleanClientCss);
+//gulp.task('clean-js', gt.cleanClientJs);
+//
+//gulp.task('build-app', gt.buildApp);
+//gulp.task('build-css', gt.buildCss);
 
-gulp.task('build-app', tasks.buildApp);
-gulp.task('build-css', tasks.buildCss);
+//gulp.task('clean-www', tasks.cleanWww);
+//gulp.task('clean-app', tasks.cleanApp);
+//
+//gulp.task('clean-client', tasks.cleanClient);
+//gulp.task('clean-css', tasks.cleanCss);
+//gulp.task('clean-js', tasks.cleanJs);
+//
+//gulp.task('build-app', tasks.buildApp);
+//gulp.task('build-css', tasks.buildCss);
 
 gulp.task('build-js', tasks.buildJs_ClientRoutes);
 gulp.task('ugl-client', tasks.uglifyJs_ClientRoutes);

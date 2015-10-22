@@ -1,22 +1,12 @@
 NEXT UP:
 
- - firebase authentication and permissions...
+ - bundle server-side scripts
+ - setup watch that rebuilds everything
+ - setup nodemon
 
 
 LATER
  - play with dynamic routes (big app example).
- - setup folder structure....
-
- /src
-  /app - components, routes & biz-logic
-  /client - css & less, client-js-libs, other assets
-  /server (?) - express, layout/views
-
- /www
-  /client - client-js-bundles, etc.
-  /server - server-js-bundles
-
-
 
 
   Firebase server-only writes (for security):
