@@ -50,6 +50,10 @@ var gulpTasks = {
 	},
 
 
+	// --------------------------------------------------------------------
+	// - CLEAN
+	// --------------------------------------------------------------------
+
 
 	clean: function (done) { del([this.distRoot]).then(done) },
 
@@ -59,6 +63,10 @@ var gulpTasks = {
 	cleanClientCss: function (done) { del([this.distCss]).then(done) },
 	cleanClientJs: function (done) { del([this.distJs]).then(done) },
 
+
+	// --------------------------------------------------------------------
+	// - BUILD
+	// --------------------------------------------------------------------
 
 
 	build: function() { this.buildServer(); this.buildClient(); },
@@ -174,6 +182,39 @@ var gulpTasks = {
 			.pipe(gulp.dest(this.distJs));
 
 		this.whenDone(done);
+	},
+
+
+	// --------------------------------------------------------------------
+	// - RUN
+	// --------------------------------------------------------------------
+
+
+	runServer: function (done) {
+
+		nodemon({
+			script: 'devSite.js',
+			watch: ['src/**/*.*'],
+			//delay:3.5,
+			tasks: ['build']
+			//, ext: 'html js'
+			//, ignore: ['ignored.js']
+		}).on('restart', function () {
+			console.log('restarted!');
+			//runSequence('watch');
+		});
+	},
+
+	runWatch: function (done) {
+
+		gulp.watch('src/**/*', function() {
+			console.log('something changed!!!!');
+		}); // - build-js = client-router...
+
+
+		//gulp.watch('src/**/*', ['build']); // - build-js = client-router...
+		//gulp.watch('src/client/css/*', ['build-css']);
+		//gulp.watch('src/client/js/*', ['build-js']);
 	}
 };
 
@@ -194,7 +235,10 @@ gulp.task('build-server-router', () => gulpTasks.buildServerRouter());
 gulp.task('build-client', () => gulpTasks.buildClient());
 gulp.task('build-client-css', () => gulpTasks.buildClientCss());
 gulp.task('build-client-router', () => gulpTasks.buildClientRouter());
-gulp.task('build-client-router-min', () => gulpTasks.buildClientRouterMin());
+
+
+//gulp.task('watch', () => gulpTasks.runWatch());
+gulp.task('dev', () => gulpTasks.runServer());
 
 
 //
