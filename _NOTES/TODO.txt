@@ -1,8 +1,6 @@
 NEXT UP:
 
- - bundle server-side scripts
- - setup watch that rebuilds everything
- - setup nodemon
+ - setup server-side api for taking form-submissions...
 
 
 LATER

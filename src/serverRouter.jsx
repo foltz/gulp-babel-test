@@ -7,7 +7,20 @@ import { match, RoutingContext } from 'react-router'
 
 import routes from './app/routes/reactRoutes';
 
-var init = (app) => {
+
+var init = (app, renderAs) => {
+
+	var layout = (name) => {
+		switch(renderAs) {
+			case "client-only":
+			case "server-only":
+				return `${name}-${renderAs}`;
+
+			default:
+				return name;
+		}
+	};
+
 
 	//app.get('/dashboard', function (req, res) {
 	//	Router.run(routes, req.url, Handler => {
@@ -26,9 +39,9 @@ var init = (app) => {
 				res.redirect(302, redirectLocation.pathname + redirectLocation.search);
 
 			else if (renderProps) {
-				res.render('index', {
+				res.render(layout("index"), {
 					title: 'gulp-babel-test',
-					//content: ''
+
 					//content:renderToString(<RoutingContext {...renderProps} />)
 					content:renderToStaticMarkup(<RoutingContext {...renderProps} />)
 				});
@@ -41,14 +54,6 @@ var init = (app) => {
 		});
 
 	});
-
-	//app.get('/*', function (req, res) {
-	//	React.render(<Router routes={routes}/>, el)
-	//	Router.run(routes, req.url, Handler => {
-	//		let content = React.renderToString(<Handler />);
-	//		res.render('index', { content: content });
-	//	});
-	//});
 };
 
 export default {initApp: init};

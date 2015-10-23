@@ -1,4 +1,4 @@
-body {font-family: sans-serif; background-color:#fff; color:#036;}
+body {font-family: sans-serif; background-color:#fff; color:#036; margin:0; padding:0;}
 
 div { margin:6px; padding: 6px; }
 .Header { border: solid 1px #a00;}

@@ -1,25 +1,22 @@
 var gulp = require("gulp");
-var runSequence = require("run-sequence");
+var gutil = require("gulp-util");
 
 var gulpFilter = require("gulp-filter");
 
 var babel = require("gulp-babel");
+var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
 
 
 var concat = require("gulp-concat");
 var rename = require("gulp-rename");
 var del = require("del");
-var rimraf = require("del");
 
 var nodemon = require("gulp-nodemon");
 
 var browserify = require("browserify");
 var babelify = require("babelify");
-var literalify = require("literalify");
-
 var uglifyify = require("uglifyify");
-var minifyify = require("minifyify");
 
 var source = require("vinyl-source-stream");
 
@@ -49,19 +46,26 @@ var gulpTasks = {
 		if (typeof done === "function") done();
 	},
 
+	delFilesIn(dir, done) {
+		del([dir + "/**/*.{js,hbs,css,map}"]).then(done)
+	},
+
 
 	// --------------------------------------------------------------------
 	// - CLEAN
 	// --------------------------------------------------------------------
 
+	deleteWWW: function (done) {
+		del(this.distRoot).then(done)
+	},
 
-	clean: function (done) { del([this.distRoot]).then(done) },
+	clean: function (done) {            this.delFilesIn(this.distRoot, done) },
 
-	cleanServer: function (done) { del([this.distServer]).then(done) },
+	cleanServer: function (done) {      this.delFilesIn(this.distServer, done) },
 
-	cleanClient: function (done) { del([this.distClient]).then(done) },
-	cleanClientCss: function (done) { del([this.distCss]).then(done) },
-	cleanClientJs: function (done) { del([this.distJs]).then(done) },
+	cleanClient: function (done) {      this.delFilesIn(this.distClient, done) },
+	cleanClientCss: function (done) {   this.delFilesIn(this.distCss, done) },
+	cleanClientJs: function (done) {    this.delFilesIn(this.distJs, done) },
 
 
 	// --------------------------------------------------------------------
@@ -69,65 +73,8 @@ var gulpTasks = {
 	// --------------------------------------------------------------------
 
 
-	build: function() { this.buildServer(); this.buildClient(); },
+	build: function() { this.buildClient(); this.buildServer(); },
 
-	buildServer: function (done) {
-
-		this.buildServerApp();
-		this.buildServerRouter();
-	},
-
-	buildServerApp: function (done) {
-
-		//this.cleanServer(() => {
-
-		var clientFilter = gulpFilter('!client.js');
-		var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
-
-		gulp.src(this.srcApp + "/**/*")
-
-			.pipe(jsFilter)
-			.pipe(sourcemaps.init())
-			.pipe(babel())
-			.pipe(sourcemaps.write("."))
-			.pipe(jsFilter.restore)
-			//.pipe(clientFilter)
-			.pipe(gulp.dest(this.distApp));
-
-		//});
-
-		this.whenDone(done);
-	},
-
-	buildServerRouter: function (done) {
-
-		//this.cleanServer(() => {
-
-		var clientFilter = gulpFilter('!client.js');
-		var jsFilter = gulpFilter('**/serverRouter.jsx', {restore: true});
-
-		gulp.src(this.srcRoot + "/**/*")
-
-			.pipe(jsFilter)
-			.pipe(sourcemaps.init())
-			.pipe(babel())
-			.pipe(sourcemaps.write("."))
-			//.pipe(jsFilter.restore)
-
-			.pipe(gulp.dest(this.distServer));
-
-		//gulp.src(this.srcRoot + "/**/*")
-		//	.pipe(jsFilter)
-		//	.pipe(sourcemaps.init())
-		//	.pipe(babel())
-		//	.pipe(sourcemaps.write("."))
-		//	.pipe(jsFilter.restore)
-		//
-		//	.pipe(gulp.dest(this.distApp));
-		//});
-
-		this.whenDone(done);
-	},
 
 	buildClient: function() {
 
@@ -185,61 +132,132 @@ var gulpTasks = {
 	},
 
 
+	buildServer: function (done) {
+
+		this.buildServerApp();
+		this.buildServerRouter();
+	},
+
+	buildServerApp: function (done) {
+
+		var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
+
+		gulp.src(this.srcApp + "/**/*")
+
+			.pipe(jsFilter)
+			.pipe(sourcemaps.init())
+			.pipe(babel())
+			.pipe(sourcemaps.write("."))
+			.pipe(jsFilter.restore)
+
+			.pipe(gulp.dest(this.distApp))
+
+			.on('error', gutil.log)
+
+			.on('end', () => {
+				this.whenDone(done);
+			});
+	},
+
+	buildServerRouter: function (done) {
+
+		var jsFilter = gulpFilter('**/serverRouter.jsx', {restore: true});
+
+		gulp.src(this.srcRoot + "/**/*")
+
+			.pipe(jsFilter)
+			.pipe(sourcemaps.init())
+			.pipe(babel())
+			.pipe(sourcemaps.write("."))
+
+			.pipe(gulp.dest(this.distServer))
+
+			.on('error', gutil.log)
+
+			.on('end', () => {
+				this.whenDone(done);
+			});
+	},
+
 	// --------------------------------------------------------------------
 	// - RUN
 	// --------------------------------------------------------------------
 
 
-	runServer: function (done) {
+	runServer: function (scriptName, done) {
 
 		nodemon({
-			script: 'devSite.js',
-			watch: ['src/**/*.*'],
-			//delay:3.5,
-			tasks: ['build']
-			//, ext: 'html js'
-			//, ignore: ['ignored.js']
-		}).on('restart', function () {
-			console.log('restarted!');
-			//runSequence('watch');
+			script: "run/" + scriptName + ".js"
+			,watch: ["src/**/*"]
+			,delay:0
+			,tasks: ["build"]
+			, ext: "html js hbs"
+			//, ignore: ["ignored.js"]
+		}).on("restart", function () {
+			console.log("restarted!");
+			//runSequence("watch");
 		});
 	},
 
+
 	runWatch: function (done) {
 
-		gulp.watch('src/**/*', function() {
-			console.log('something changed!!!!');
+		gulp.watch('src/**/*.css', () => {
+			console.log('rebuild CSS');
+			this.buildClientCss();
 		}); // - build-js = client-router...
 
 
 		//gulp.watch('src/**/*', ['build']); // - build-js = client-router...
 		//gulp.watch('src/client/css/*', ['build-css']);
 		//gulp.watch('src/client/js/*', ['build-js']);
+	},
+
+	runDev: function (done) {
+		this.runWatch();
+		this.runServer("dev");
+	},
+
+	runDev_ServerOnly: function (done) {
+		this.runWatch();
+		this.runServer("dev-server-only");
+	},
+
+	runDev_ClientOnly: function (done) {
+		this.runWatch();
+		this.runServer("dev-client-only");
 	}
 };
 
-
+gulp.task('delete-WWW', () => gulpTasks.deleteWWW());
 gulp.task('clean', () => gulpTasks.clean());
-gulp.task('clean-server', () => gulpTasks.cleanServer());
-//
+
+
 gulp.task('clean-client', () => gulpTasks.cleanClient());
 gulp.task('clean-client-css', () => gulpTasks.cleanClientCss());
 gulp.task('clean-client-js', () => gulpTasks.cleanClientJs());
 
+gulp.task('clean-server', () => gulpTasks.cleanServer());
+
 
 gulp.task('build', () => gulpTasks.build());
-gulp.task('build-server', () => gulpTasks.buildServer());
-gulp.task('build-server-app', () => gulpTasks.buildServerApp());
-gulp.task('build-server-router', () => gulpTasks.buildServerRouter());
 
 gulp.task('build-client', () => gulpTasks.buildClient());
 gulp.task('build-client-css', () => gulpTasks.buildClientCss());
 gulp.task('build-client-router', () => gulpTasks.buildClientRouter());
+gulp.task('build-client-router-min', () => gulpTasks.buildClientRouterMin());
+
+
+gulp.task('build-server', () => gulpTasks.buildServer());
+gulp.task('build-server-app', () => gulpTasks.buildServerApp());
+gulp.task('build-server-router', () => gulpTasks.buildServerRouter());
+
 
 
 //gulp.task('watch', () => gulpTasks.runWatch());
-gulp.task('dev', () => gulpTasks.runServer());
-
+gulp.task('dev', () => gulpTasks.runDev());
+gulp.task('dev-server-only', () => gulpTasks.runDev_ServerOnly());
+gulp.task('dev-client-only', () => gulpTasks.runDev_ClientOnly());
 
 //
 //gulp.task('run-server', tasks.runServer);
