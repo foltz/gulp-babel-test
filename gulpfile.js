@@ -137,7 +137,7 @@ var gulpTasks = {
 
 	buildServer: function (done) {
 
-		this.buildServerApi();
+		//this.buildServerApi();
 		this.buildServerApp();
 		this.buildServerRouter();
 	},
@@ -167,7 +167,7 @@ var gulpTasks = {
 
 		var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
 
-		gulp.src(this.srcApp + "/**/*")
+		gulp.src([this.srcApp + "/**/*", this.srcApi + "/**/*"])
 
 			.pipe(jsFilter)
 			.pipe(sourcemaps.init())

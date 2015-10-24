@@ -7,7 +7,8 @@ var router = express.Router();
 
 var apiRoutes = (req, res) => {
 
-	res.json({test:"val"});
+
+	res.json({url:req.url, spired:true});
 	res.end();
 }
 
