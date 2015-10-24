@@ -28,6 +28,9 @@ var gulpTasks = {
 
 	distServer: "www/server",
 
+	srcApi: "src/api",
+	distApi: "www/server/api",
+
 	srcApp: "src/app",
 	distApp: "www/server/app",
 
@@ -134,8 +137,30 @@ var gulpTasks = {
 
 	buildServer: function (done) {
 
+		this.buildServerApi();
 		this.buildServerApp();
 		this.buildServerRouter();
+	},
+
+	buildServerApi: function (done) {
+
+		var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
+
+		gulp.src(this.srcApi + "/**/*")
+
+				.pipe(jsFilter)
+				.pipe(sourcemaps.init())
+				.pipe(babel())
+				.pipe(sourcemaps.write("."))
+				.pipe(jsFilter.restore)
+
+				.pipe(gulp.dest(this.distApi))
+
+				.on('error', gutil.log)
+
+				.on('end', () => {
+					this.whenDone(done);
+				});
 	},
 
 	buildServerApp: function (done) {
