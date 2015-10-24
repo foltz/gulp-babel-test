@@ -9,21 +9,25 @@ var AppUserForm = (function () {
     return AppUserForm;
 })();
 var AppUserCommands = (function () {
-    function AppUserCommands(url) {
+    function AppUserCommands() {
     }
     AppUserCommands.prototype.saveRec = function (form) {
         var cmd = new Command();
         var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
         var fBase = new Firebase(FB_URL);
-        if (form.key) {
-            var userRef = fBase.child(form.key);
-            var user = userRef;
-            if (user == null)
-                return cmd.setError("No user found");
-            user.firstName = form.firstName;
-            user.lastName = form.lastName;
-            user.email = form.email;
-            userRef.set(user);
+        if (form.id) {
+            var userRef = fBase.child(form.id);
+            userRef.once('value', function (result) {
+                var user = result.val();
+                if (user == null) {
+                    console.log("No user found");
+                    return;
+                }
+                user.firstName = form.firstName;
+                user.lastName = form.lastName;
+                user.email = form.email;
+                userRef.set(user);
+            });
         }
         else {
             var user = new AppUserDoc();

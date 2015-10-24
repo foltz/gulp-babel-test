@@ -297,7 +297,7 @@ class UserEditView extends React.Component {
 			<div>
 				<h2>Edit User</h2>
 				<form onSubmit={ this.onSubmit.bind(this) }>
-					
+
 					<input onChange={this.onChange.bind(this, "firstName")} value={this.state.rec.firstName} /> first <br/>
 					<input onChange={this.onChange.bind(this, "lastName")} value={this.state.rec.lastName} /> last <br/>
 					<input onChange={this.onChange.bind(this, "email")} value={this.state.rec.email} /> email <br/>

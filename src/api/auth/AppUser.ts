@@ -13,13 +13,10 @@ class AppUserDoc implements IAppUser {
 }
 class AppUserForm {
 
-	key:string;
+	id:string;
 	firstName:string;
 	lastName:string;
 	email:string;
-
-	testVal:boolean;
-
 }
 
 class AppUserCommands {
@@ -27,7 +24,7 @@ class AppUserCommands {
 
 	//fbRepo:Firebase = null;
 
-	constructor(url) {
+	constructor() {
 		//this.fbRepo = new Firebase(url);
 	}
 	saveRec (form:AppUserForm) : Command {
@@ -37,21 +34,29 @@ class AppUserCommands {
 		var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
 		var fBase = new Firebase(FB_URL);
 
-		if (form.key) {
+		if (form.id) {
 
 			// - check to see if the user exists....
-			let userRef = fBase.child(form.key);
-			let user:IAppUser = userRef;
+			let userRef = fBase.child(form.id);
 
-			if (user == null) return cmd.setError("No user found");
+			userRef.once('value', function(result) {
 
-			user.firstName = form.firstName;
-			user.lastName = form.lastName;
-			user.email = form.email;
+				var user = result.val();
+				if (user == null) {
+					console.log("No user found");
+					return;
+				}
 
-			userRef.set(user);
+				user.firstName = form.firstName;
+				user.lastName = form.lastName;
+				user.email = form.email;
+
+				userRef.set(user);
+
+			});
 
 		} else {
+
 			let user = new AppUserDoc();
 
 			user.firstName = form.firstName;
