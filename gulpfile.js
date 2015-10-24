@@ -191,7 +191,7 @@ var gulpTasks = {
 			,watch: ["src/**/*"]
 			,delay:0
 			,tasks: ["build"]
-			, ext: "html js hbs"
+			, ext: "html js hbs jsx"
 			//, ignore: ["ignored.js"]
 		}).on("restart", function () {
 			console.log("restarted!");

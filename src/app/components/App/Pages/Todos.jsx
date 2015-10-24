@@ -48,12 +48,12 @@ class Todos extends React.Component {
 
 		super(props);
 
-		this.repo = new TodoRepo();
+		this.api = new TodoRepo();
 		this.state = { text: '', items: []};
 	}
 
 
-	getRepo () { return this.repo }
+	getRepo () { return this.api }
 
 	getItems () { return this.state.items }
 	setItems(items) { this.setState({items: items})}
@@ -72,12 +72,12 @@ class Todos extends React.Component {
 
 	componentDidMount () {
 		console.log('List did mount');
-		this.getRepo().doMount((items) => this.setItems(items));
+		this.getRepo().mountListView((items) => this.setItems(items));
 	}
 
 	componentWillUnmount () {
 		console.log('List will unmount');
-		this.getRepo().doUnmount();
+		this.getRepo().unmountListView();
 	}
 
 	componentWillReceiveProps(next) {

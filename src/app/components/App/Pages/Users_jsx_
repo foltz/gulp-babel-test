@@ -1,0 +1,236 @@
+
+import React from 'react';
+import Firebase from 'firebase';
+
+class UserApi {
+
+	constructor() {
+
+		var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
+		this.fBase = new Firebase(FB_URL);
+	}
+
+	// --------------------------------------------------------------
+	// - COMPONENT LIFECYCLE
+	// --------------------------------------------------------------
+
+	doMount(cb) {
+
+		cb([{firstName: "ddd"}]);
+		//this.fBase.on('value', function(results) {
+		//
+		//	console.log("onValue: ", results);
+		//
+		//	var list = [];
+		//	results.forEach(function(rec) {
+		//
+		//		var val = rec.val();
+		//		console.log("val: ", val);
+		//
+		//		var item = {};
+		//		item['.key'] = rec.key();
+		//		item.firstName = val.firstName;
+		//		item.lastName = val.lastName;
+		//		item.email = val.email;
+		//
+		//		console.log("item: ", item);
+		//		list.push({});
+		//
+		//	});
+		//
+		//	cb(list);
+		//});
+	}
+
+	doUnmount() { this.fBase.off() }
+
+
+	// --------------------------------------------------------------
+	// - ACTIONS
+	// --------------------------------------------------------------
+
+	saveUser (form) {
+
+		if (form.key) {
+
+			// - check to see if the user exists....
+			let userRef = this.fBase.child(form.key);
+			let user = userRef;
+
+			if (user == null) {
+
+				console.log("No user found");
+				return;
+			}
+
+			user.firstName = form.firstName;
+			user.lastName = form.lastName;
+			user.email = form.email;
+
+			userRef.set(user);
+
+		} else {
+
+			let user = {};
+
+			user.firstName = form.firstName;
+			user.lastName = form.lastName;
+			user.email = form.email;
+
+			let userRef = this.fBase.push();
+			userRef.set(user);
+
+		}
+	}
+	removeUser (key) { this.fBase.child(key).remove() }
+}
+
+class Users extends React.Component {
+
+	constructor(props) {
+
+		super(props);
+
+		this.api = new UserApi();
+		this.state = { rec: {}, list: []};
+	}
+
+	getApi() { return this.api; }
+
+	getList () { return this.state.list }
+	setList(list) {
+		console.log("set list: ", list);
+		this.setState({list: list})}
+
+	getRec () { return this.state.rec }
+	setRec(rec) { this.setState({rec: rec})}
+
+
+	// --------------------------------------------------------------
+	// - COMPONENT LIFECYCLE
+	// --------------------------------------------------------------
+
+	componentWillMount() {
+		console.log('List will mount');
+	}
+
+	componentDidMount () {
+		console.log('List did mount');
+		this.getApi().doMount((list) => this.setList(list));
+	}
+
+	componentWillUnmount () {
+		console.log('List will unmount');
+		this.getApi().doUnmount();
+	}
+
+	componentWillReceiveProps(next) {
+		console.log('List will receive props');
+	}
+
+	// --------------------------------------------------------------
+	// - EVENT HANDLERS
+	// --------------------------------------------------------------
+
+	onChange (fieldName, e) {
+
+		var rec = this.getRec();
+		rec[fieldName] = e.target.value;
+		this.setRec(rec);
+
+		console.log("onChange: ", rec);
+	}
+
+	onSubmit (e) {
+
+		e.preventDefault();
+
+		var rec = this.getRec();
+
+		this.getApi().saveUser(rec);
+		this.setRec({});
+	}
+
+	// --------------------------------------------------------------
+	// - RENDER
+	// --------------------------------------------------------------
+
+	render () {
+
+		var api = this.getApi();
+		var list = this.getList();
+		var rec = this.getRec();
+
+		var selectRec = this.setRec.bind(this);
+
+		//function ListItems() {
+		//
+		//	console.log("render list: ", list);
+		//
+		//	//var renderItem = (item, key) => {
+		//	//
+		//	//	console.log("render key: ", key);
+		//	//	console.log("render item: ", item);
+		//	//
+		//	//	return (
+		//	//
+		//	//	<li>??{item.firstName}</li>
+		//	//)};
+		//
+		//	var renderItem = (item, key) => (<li>??</li>);
+		//
+		//
+		//	var renderItem2 = (item, key) => {
+		//
+		//		console.log("render item: ", item);
+		//
+		//		return (
+		//
+		//			<li key={key} onClick={ selectRec(item) }>{ item.email } ({item.firstName} {item.lastName})
+		//			<span
+		//				onClick={ api.removeUser.bind(api, item['.key']) }
+		//				style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
+		//			X
+		//			</span>
+		//			</li>
+		//		)};
+		//
+		//	return <ul>{ list.map(renderItem) }</ul>;
+		//}
+
+		function ListItems() {
+
+			var createItem = (item, index) => (
+
+				<li key={ index }>{ item.text }
+					<span
+						onClick={ repo.removeItem.bind(repo, item['.key']) }
+						style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
+					X?
+					</span>
+				</li>
+			);
+
+			return <ul>{ items.map(createItem) }</ul>;
+		}
+
+		return (
+			<div>
+				render list!!:
+				<ListItems />
+				render list!!:
+
+				<form onSubmit={ this.onSubmit.bind(this) }>
+					<input onChange={this.onChange.bind(this, "key")} value={rec.key} /> key<br/>
+					<input onChange={this.onChange.bind(this, "firstName")} value={rec.firstName} /> first <br/>
+					<input onChange={this.onChange.bind(this, "lastName")} value={rec.lastName} /> last <br/>
+					<input onChange={this.onChange.bind(this, "email")} value={rec.email} /> email <br/>
+					<input type="submit" value="Save" />
+				</form>
+
+			</div>
+		);
+	}
+}
+
+export default Users;
