@@ -30,8 +30,8 @@ var init = (app, renderAs) => {
 	//	});
 	//});
 
-	app.get('/api/*', apiRoutes);
 
+	app.use('/api', apiRoutes);
 
 	app.get('/*', (req, res) => {
 

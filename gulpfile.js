@@ -144,15 +144,15 @@ var gulpTasks = {
 
 	buildServerApi: function (done) {
 
-		var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
+		//var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
 
-		gulp.src(this.srcApi + "/**/*")
+		gulp.src(this.srcApi + "/**/*.js")
 
-				.pipe(jsFilter)
+				//.pipe(jsFilter)
 				.pipe(sourcemaps.init())
 				.pipe(babel())
 				.pipe(sourcemaps.write("."))
-				.pipe(jsFilter.restore)
+				//.pipe(jsFilter.restore)
 
 				.pipe(gulp.dest(this.distApi))
 
