@@ -99,7 +99,7 @@ var gulpTasks = {
 	buildClientRouter: function (done) {
 
 		var bundler = browserify({
-				entries: [this.srcRoot + "/clientRouter.js"],
+				entries: [this.srcRoot + "/clientRouter.jsx"],
 				transform: [babelify],
 				extensions: ['.js', '.jsx'],
 				debug: true // Gives us sourcemapping
@@ -118,7 +118,7 @@ var gulpTasks = {
 	buildClientRouterMin: function (done) {
 
 		var bundler = browserify({
-			entries: [this.srcRoot + "/clientRouter.js"],
+			entries: [this.srcRoot + "/clientRouter.jsx"],
 			transform: [babelify],
 			extensions: ['.js', '.jsx'],
 			debug: false // no sourcemapping
@@ -137,7 +137,7 @@ var gulpTasks = {
 
 	buildServer: function (done) {
 
-		//this.buildServerApi();
+		this.buildServerApi();
 		this.buildServerApp();
 		this.buildServerRouter();
 	},
@@ -167,7 +167,7 @@ var gulpTasks = {
 
 		var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
 
-		gulp.src([this.srcApp + "/**/*", this.srcApi + "/**/*"])
+		gulp.src(this.srcApp + "/**/*")
 
 			.pipe(jsFilter)
 			.pipe(sourcemaps.init())
@@ -214,7 +214,7 @@ var gulpTasks = {
 		nodemon({
 			script: "run/" + scriptName + ".js"
 			,watch: ["src/**/*"]
-			,delay:0
+			,delay:0.5
 			,tasks: ["build"]
 			, ext: "html js hbs jsx"
 			//, ignore: ["ignored.js"]
@@ -274,6 +274,7 @@ gulp.task('build-client-router-min', () => gulpTasks.buildClientRouterMin());
 
 
 gulp.task('build-server', () => gulpTasks.buildServer());
+gulp.task('build-server-api', () => gulpTasks.buildServerApi());
 gulp.task('build-server-app', () => gulpTasks.buildServerApp());
 gulp.task('build-server-router', () => gulpTasks.buildServerRouter());
 
