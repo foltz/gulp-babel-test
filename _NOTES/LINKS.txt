@@ -38,3 +38,7 @@ npm dedupe
 
 react/bootstrap:
 http://react-bootstrap.github.io/
+
+
+
+http://weblogs.asp.net/dwahlin/creating-a-typescript-workflow-with-gulp

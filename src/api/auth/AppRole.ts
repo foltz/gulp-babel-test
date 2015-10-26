@@ -1,19 +1,19 @@
-//eval('var Slacktravel = (this.Slacktravel || (this.Slacktravel = {}))');
 //import Firebase from 'firebase';
 
-interface IAppUser {
+
+interface IAppRole {
 
 	firstName?:string;
 	lastName?:string;
 	email?:string;
 }
 
-class AppUserDoc implements IAppUser {
+class AppRoleDoc implements IAppRole {
 	firstName:string;
 	lastName:string;
 	email:string;
 }
-class AppUserForm {
+class AppRoleForm {
 
 	id:string;
 	firstName:string;
@@ -21,7 +21,7 @@ class AppUserForm {
 	email:string;
 }
 
-class AppUserCommands {
+export class AppRoleCommands {
 
 
 	//fbRepo:Firebase = null;
@@ -32,12 +32,12 @@ class AppUserCommands {
 
 	runTest() { return "yo baby!"}
 
-	saveRec (form:AppUserForm) : Command {
+	saveRec (form:AppRoleForm) : Command {
 
 		var cmd = new Command();
 
 
-		var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
+		var FB_URL = "https://slacktravel-test.firebaseio.com/AppRoles/";
 		var fBase = new Firebase(FB_URL);
 
 		if (form.id) {
@@ -63,7 +63,7 @@ class AppUserCommands {
 
 		} else {
 
-			let user = new AppUserDoc();
+			let user = new AppRoleDoc();
 
 			user.firstName = form.firstName;
 			user.lastName = form.lastName;
@@ -99,7 +99,7 @@ class Command {
 	}
 }
 
-
-export function AppUsers () {
-	return new AppUserCommands()
+export function AppRoles () {
+	return new AppRoleCommands()
 }
+

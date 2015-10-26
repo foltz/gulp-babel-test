@@ -7,6 +7,7 @@ var babel = require("gulp-babel");
 var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
 
+var ts = require('gulp-typescript');
 
 var concat = require("gulp-concat");
 var rename = require("gulp-rename");
@@ -142,6 +143,33 @@ var gulpTasks = {
 		this.buildServerRouter();
 	},
 
+	buildServerApiTypescript: function (done) {
+
+		//var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
+
+		gulp.src([this.srcApi + "/**/*.ts", 'typings/**.ts'])
+
+			//.pipe(jsFilter)
+			.pipe(ts({
+				"target": "es5",
+				"module": "commonjs",
+				//"declaration": false,
+				//"noImplicitAny": false,
+				//"removeComments": true,
+				//"noLib": false,
+				"out": "apiModules.js"
+			}))
+
+			.pipe(gulp.dest(this.distApi))
+
+			.on('error', gutil.log)
+
+			.on('end', () => {
+				this.whenDone(done);
+			});
+	},
+
+
 	buildServerApi: function (done) {
 
 		//var jsFilter = gulpFilter('**/*.{js,jsx}', {restore: true});
@@ -275,6 +303,7 @@ gulp.task('build-client-router-min', () => gulpTasks.buildClientRouterMin());
 
 gulp.task('build-server', () => gulpTasks.buildServer());
 gulp.task('build-server-api', () => gulpTasks.buildServerApi());
+gulp.task('build-server-api-typescript', () => gulpTasks.buildServerApiTypescript());
 gulp.task('build-server-app', () => gulpTasks.buildServerApp());
 gulp.task('build-server-router', () => gulpTasks.buildServerRouter());
 

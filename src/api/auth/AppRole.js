@@ -1,24 +1,23 @@
-//eval('var Slacktravel = (this.Slacktravel || (this.Slacktravel = {}))');
 //import Firebase from 'firebase';
-var AppUserDoc = (function () {
-    function AppUserDoc() {
+var AppRoleDoc = (function () {
+    function AppRoleDoc() {
     }
-    return AppUserDoc;
+    return AppRoleDoc;
 })();
-var AppUserForm = (function () {
-    function AppUserForm() {
+var AppRoleForm = (function () {
+    function AppRoleForm() {
     }
-    return AppUserForm;
+    return AppRoleForm;
 })();
-var AppUserCommands = (function () {
+var AppRoleCommands = (function () {
     //fbRepo:Firebase = null;
-    function AppUserCommands() {
+    function AppRoleCommands() {
         //this.fbRepo = new Firebase(url);
     }
-    AppUserCommands.prototype.runTest = function () { return "yo baby!"; };
-    AppUserCommands.prototype.saveRec = function (form) {
+    AppRoleCommands.prototype.runTest = function () { return "yo baby!"; };
+    AppRoleCommands.prototype.saveRec = function (form) {
         var cmd = new Command();
-        var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
+        var FB_URL = "https://slacktravel-test.firebaseio.com/AppRoles/";
         var fBase = new Firebase(FB_URL);
         if (form.id) {
             // - check to see if the user exists....
@@ -36,7 +35,7 @@ var AppUserCommands = (function () {
             });
         }
         else {
-            var user = new AppUserDoc();
+            var user = new AppRoleDoc();
             user.firstName = form.firstName;
             user.lastName = form.lastName;
             user.email = form.email;
@@ -46,8 +45,9 @@ var AppUserCommands = (function () {
         fBase.off();
         return cmd.setSuccess(null);
     };
-    return AppUserCommands;
+    return AppRoleCommands;
 })();
+exports.AppRoleCommands = AppRoleCommands;
 var Command = (function () {
     function Command() {
     }
@@ -63,7 +63,7 @@ var Command = (function () {
     };
     return Command;
 })();
-function AppUsers() {
-    return new AppUserCommands();
+function AppRoles() {
+    return new AppRoleCommands();
 }
-exports.AppUsers = AppUsers;
+exports.AppRoles = AppRoles;
