@@ -1,22 +1,25 @@
 
 import express from 'express';
-
+import bodyParser from 'body-parser';
 
 var router = express.Router();
 
+// create application/x-www-form-urlencoded parser
+var formParser = bodyParser.urlencoded({ extended: false });
 
-router.get("/appUser/edit", (req, res) => {
+
+router.get("/appUser/remove", formParser, (req, res) => {
 
 
-	res.json({url:req.url, spired:true});
+	res.json({url:req.url, body:req.body});
 	res.end();
 
 });
 
-router.get("/appUser/save", (req, res) => {
+router.post("/appUser/save", formParser, (req, res) => {
 
-
-	res.json({url:req.url, spired:true});
+	// - TODO: wire up AppUserCommands....
+	res.json({url:req.url, body:req.body});
 	res.end();
 
 });

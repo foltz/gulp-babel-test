@@ -65,6 +65,13 @@ class UserApi {
 
 	saveUser (form) {
 
+		$.post("/api/appUser/save", form, (result) => {
+			console.log("save user: ", result);
+		});
+	}
+
+	saveUserLocal (form) {
+
 		if (form.id) {
 
 			// - check to see if the user exists....
