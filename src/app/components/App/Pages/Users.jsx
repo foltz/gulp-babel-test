@@ -63,7 +63,10 @@ class UserApi {
 	//addItem (text) { this.fBase.push({ text: text }) }
 	removeUser (id) { this.fBase.child(id).remove() }
 
-	saveUser (form) {
+	saveUser(form) {
+		this.saveUserLocal(form);
+	}
+	saveUserServer (form) {
 
 		$.post("/api/appUser/save", form, (result) => {
 			console.log("save user: ", result);
