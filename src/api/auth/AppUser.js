@@ -1,5 +1,4 @@
-//eval('var Slacktravel = (this.Slacktravel || (this.Slacktravel = {}))');
-//import Firebase from 'firebase';
+var Firebase = require('firebase');
 var AppUserDoc = (function () {
     function AppUserDoc() {
     }
@@ -11,17 +10,14 @@ var AppUserForm = (function () {
     return AppUserForm;
 })();
 var AppUserCommands = (function () {
-    //fbRepo:Firebase = null;
     function AppUserCommands() {
-        //this.fbRepo = new Firebase(url);
     }
-    AppUserCommands.prototype.runTest = function () { return "yo baby!"; };
+    AppUserCommands.prototype.runTest = function (val) { return "yo baby?! " + val; };
     AppUserCommands.prototype.saveRec = function (form) {
         var cmd = new Command();
         var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
         var fBase = new Firebase(FB_URL);
         if (form.id) {
-            // - check to see if the user exists....
             var userRef = fBase.child(form.id);
             userRef.once('value', function (result) {
                 var user = result.val();
@@ -48,6 +44,7 @@ var AppUserCommands = (function () {
     };
     return AppUserCommands;
 })();
+exports.AppUserCommands = AppUserCommands;
 var Command = (function () {
     function Command() {
     }
@@ -63,7 +60,3 @@ var Command = (function () {
     };
     return Command;
 })();
-function AppUsers() {
-    return new AppUserCommands();
-}
-exports.AppUsers = AppUsers;

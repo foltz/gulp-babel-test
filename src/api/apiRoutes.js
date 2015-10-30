@@ -3,7 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 
-import AppUsers from './auth/AppUser';
+import {AppUserCommands} from './auth/AppUser';
 
 var router = express.Router();
 
@@ -11,30 +11,26 @@ var router = express.Router();
 var formParser = bodyParser.urlencoded({ extended: false });
 
 
+var appUsers = new AppUserCommands();
+
 router.get("/appUser/remove", formParser, (req, res) => {
 
+	console.log("uc", appUsers);
+	var testResult = appUsers.runTest("save test");
 
-	res.json({url:req.url, body:req.body});
+	res.json({url:req.url, body:req.body, test:testResult});
 	res.end();
 
 });
 
 router.post("/appUser/save", formParser, (req, res) => {
 
-	console.log("uc", AppUsers);
-	var appUserResult = new AppUsers.AppUserCommands.runTest();
+	var save = appUsers.saveRec(req.body);
+
 	// - TODO: wire up AppUserCommands....
-	res.json({url:req.url, body:req.body, appUser:appUserResult});
+	res.json({url:req.url, body:req.body, appUser:save});
 	res.end();
 
 });
-
-
-//var apiRoutes = (req, res) => {
-//
-//
-//	res.json({url:req.url, spired:true});
-//	res.end();
-//}
 
 export default router;

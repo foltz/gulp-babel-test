@@ -1,5 +1,5 @@
 //eval('var Slacktravel = (this.Slacktravel || (this.Slacktravel = {}))');
-//import Firebase from 'firebase';
+import Firebase = require('firebase');
 
 interface IAppUser {
 
@@ -19,23 +19,16 @@ class AppUserForm {
 	firstName:string;
 	lastName:string;
 	email:string;
+	another:string;
 }
 
-class AppUserCommands {
+export class AppUserCommands {
 
-
-	//fbRepo:Firebase = null;
-
-	constructor() {
-		//this.fbRepo = new Firebase(url);
-	}
-
-	runTest() { return "yo baby!"}
+	runTest(val:string) { return `yo baby?! ${val}`}
 
 	saveRec (form:AppUserForm) : Command {
 
 		var cmd = new Command();
-
 
 		var FB_URL = "https://slacktravel-test.firebaseio.com/AppUsers/";
 		var fBase = new Firebase(FB_URL);
@@ -59,6 +52,7 @@ class AppUserCommands {
 
 				userRef.set(user);
 
+				var x = "";
 			});
 
 		} else {
@@ -71,7 +65,6 @@ class AppUserCommands {
 
 			let userRef = fBase.push();
 			userRef.set(user);
-
 		}
 
 		fBase.off();
@@ -97,9 +90,4 @@ class Command {
 		this.data = data;
 		return this;
 	}
-}
-
-
-export function AppUsers () {
-	return new AppUserCommands()
 }

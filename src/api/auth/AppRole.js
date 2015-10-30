@@ -10,9 +10,7 @@ var AppRoleForm = (function () {
     return AppRoleForm;
 })();
 var AppRoleCommands = (function () {
-    //fbRepo:Firebase = null;
     function AppRoleCommands() {
-        //this.fbRepo = new Firebase(url);
     }
     AppRoleCommands.prototype.runTest = function () { return "yo baby!"; };
     AppRoleCommands.prototype.saveRec = function (form) {
@@ -20,7 +18,6 @@ var AppRoleCommands = (function () {
         var FB_URL = "https://slacktravel-test.firebaseio.com/AppRoles/";
         var fBase = new Firebase(FB_URL);
         if (form.id) {
-            // - check to see if the user exists....
             var userRef = fBase.child(form.id);
             userRef.once('value', function (result) {
                 var user = result.val();

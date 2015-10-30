@@ -64,7 +64,8 @@ class UserApi {
 	removeUser (id) { this.fBase.child(id).remove() }
 
 	saveUser(form) {
-		this.saveUserLocal(form);
+		//this.saveUserLocal(form);
+		this.saveUserServer(form);
 	}
 	saveUserServer (form) {
 
